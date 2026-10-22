@@ -1,0 +1,4 @@
+{
+  "url": "https://spbc-connect.netlify.app",
+  "_note": "The ONE place the public address lives. Every link preview, canonical tag, sitemap and robots.txt is built from this. TODO: confirm the Netlify site name (or the church's custom domain, e.g. myspbc.org) before the first deploy."
+}
