@@ -12,6 +12,7 @@ import { dirname, resolve } from 'node:path'
  */
 const SITE_URL: string = JSON.parse(readFileSync(new URL('./site.config.json', import.meta.url), 'utf8')).url.replace(/\/+$/, '')
 const SITE_HOST = new URL(SITE_URL).host
+const OG_VERSION = new Date().toISOString().slice(0, 10).replace(/-/g, '')
 
 type PageMeta = {
   /** Route path, no trailing slash except root */
@@ -77,7 +78,8 @@ function render(template: string, p: PageMeta): string {
     '__PAGE_URL__': url,
     '__PAGE_OG_TITLE__': esc(p.ogTitle),
     '__PAGE_OG_DESC__': esc(p.ogDescription),
-    '__PAGE_IMAGE__': `${SITE_URL}${p.image}`,
+    // ?v= changes every build so iMessage, Facebook and Slack fetch the new card instead of a cached one.
+    '__PAGE_IMAGE__': `${SITE_URL}${p.image}?v=${OG_VERSION}`,
     '__PAGE_IMAGE_ALT__': esc(p.imageAlt),
     '__SITE_HOST__': SITE_HOST,
   }

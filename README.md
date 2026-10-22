@@ -54,11 +54,12 @@ Church facts live in one place: `src/config/site.ts` (campuses, times, phone num
 - **Real church media**: photos and flyers in `public/images/church/` (from myspbc.org and myspbc.events, used with the church’s permission as its own site). Logos are the church’s SVGs recolored.
 - **Generated (Kie.ai, Nano Banana Pro)**: `public/images/art/spbc-s1-lamp`, `-s2-street`, `-s4-branches`, `-s5-dawn` (2000 px + 800 px WebP). Atmosphere only: no people, faces, text or logos. Prompts are in `MEDIA-PLAN.md`; the run log is `assets/generations.jsonl` (not committed).
 - **Scroll film** (`src/web/home/LightFilm.tsx`): canvas particles over the Kie stills and the church’s own worship photo. Reduced-motion users and short windows get `StaticLightFilm`.
-- **Link previews**: `public/og/*.png` (1200×630, one per page group and one per event) and the icons are rendered by `npm run og` (`scripts/make-og.mjs`, needs `playwright-core` and a local Chrome; set `CHROME=` if it isn’t found). Re-run after adding an event.
+- **Link previews (texts, iMessage, Facebook, Slack)**: the home page and the portal/sign-in pages use a logo card (`og/home.png`, `og/connect.png`); every other page and event has its own card. Image URLs carry `?v=<build date>` so apps refetch after each deploy. Every page’s canonical and `og:url` point to the address in `site.config.json`, and visitors who land on a Netlify deploy or branch address (`…--spbc-website-portal-demo.netlify.app`) are sent to the main address.
+- **Link preview images**: `public/og/*.png` (1200×630, one per page group and one per event) and the icons are rendered by `npm run og` (`scripts/make-og.mjs`, needs `playwright-core` and a local Chrome; set `CHROME=` if it isn’t found). Re-run after adding an event.
 
 ## Deploy (Netlify)
 
-1. Put the real address in **`site.config.json`** (currently `https://spbc-connect.netlify.app`). Canonical tags, preview cards, sitemap, robots and structured data build from it.
+1. Put the real address in **`site.config.json`** (currently `https://spbc-website-portal-demo.netlify.app`). Canonical tags, preview cards, sitemap, robots and structured data build from it.
 2. Push to GitHub, connect the repo in Netlify. Build command `npm run build`, publish `dist` (already in `netlify.toml`).
 3. In Netlify → Forms, turn on notifications for `spbc-contact`, `spbc-prayer`, `spbc-help`, `spbc-visit`, `spbc-volunteer`, `spbc-guides` (route help requests to Outreach@myspbc.org).
 4. After the domain moves, test a few old links (e.g. `/about`, `/ministries`, `/get-help`) to confirm the 301s.

@@ -58,7 +58,23 @@ h1.s{font-size:62px}h1.xs{font-size:52px}
 .mark{position:absolute;right:-60px;bottom:-80px;width:620px;opacity:.16;z-index:1}
 .collage{position:absolute;inset:0 0 0 610px;z-index:1}
 .collage img{position:absolute;width:260px;border-radius:16px;box-shadow:0 24px 50px rgba(0,0,0,.4)}
-.icon{width:512px;height:512px;display:flex;align-items:center;justify-content:center}`
+.icon{width:512px;height:512px;display:flex;align-items:center;justify-content:center}
+.hero{position:relative;width:1200px;height:630px;overflow:hidden;background:#00492A;color:#fff}
+.hero .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(100deg,rgba(0,52,30,.97) 0%,rgba(0,58,33,.93) 42%,rgba(0,58,33,.55) 68%,rgba(18,18,18,.25) 100%),linear-gradient(to top,rgba(10,20,14,.55),transparent 45%)}
+.hero .glow{position:absolute;left:-120px;bottom:-200px;width:700px;height:520px;background:radial-gradient(closest-side,rgba(243,128,31,.38),transparent);filter:blur(10px)}
+.hero .wm{position:absolute;right:-70px;top:-40px;width:560px;opacity:.10}
+.hero .in{position:absolute;inset:0;padding:62px 70px;display:flex;flex-direction:column}
+.hero .lg{width:560px;height:auto;filter:drop-shadow(0 6px 24px rgba(0,0,0,.35))}
+.hero .bar{margin:34px 0 26px;width:84px;height:6px;border-radius:6px;background:linear-gradient(90deg,#F3801F,#FFD7A3)}
+.hero h1{font:800 64px/1 B;letter-spacing:-0.035em;max-width:760px}
+.hero h1 b{background:linear-gradient(90deg,#F3801F,#FFC58A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .chips{margin-top:auto;display:flex;gap:12px;flex-wrap:wrap}
+.hero .chip{display:flex;align-items:baseline;gap:10px;border-radius:999px;padding:12px 22px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.28);font:700 22px/1 A}
+.hero .chip span{font:400 20px/1 A;opacity:.85}
+.hero .chip.o{background:#F3801F;border-color:#F3801F;color:#17131C}
+.hero .chip.o span{opacity:.8}
+.hero .sub{margin-top:14px;font:400 24px/1.3 A;opacity:.88}`
 
 const logo = (light) => `<img class="logo" src="${img(`images/church/spbc-logo-${light ? 'white' : 'ink'}.svg`)}">`
 const leftDark = 'linear-gradient(90deg,#121212 0%,rgba(18,18,18,.92) 38%,rgba(18,18,18,.35) 62%,rgba(18,18,18,0) 80%)'
@@ -73,7 +89,12 @@ function photoCard({ eyebrow, title, sub, photo, tone = 'night', pos = 'center',
 const times = '<span>Creighton 9 AM</span><span>Belt 11:30 AM</span><span>Online 9 AM</span>'
 
 const cards = {
-  home: photoCard({ eyebrow: 'Richmond &amp; Henrico · since 1909', title: 'A church for people on the GROW.', photo: 'worship-lights.jpg', pos: '50% 40%', foot: times }),
+  home: `<div class="hero"><img class="ph" src="${img('images/church/worship-lights.jpg')}"><div class="shade"></div><div class="glow"></div>
+    <img class="wm" src="${img('images/church/spbc-mark-white.svg')}">
+    <div class="in"><img class="lg" src="${img('images/church/spbc-logo-white.svg')}">
+    <div class="bar"></div><h1>A church for people on the <b>GROW.</b></h1>
+    <p class="sub">Richmond &amp; Henrico, Virginia · since 1909</p>
+    <div class="chips"><div class="chip o">Creighton <span>9 AM</span></div><div class="chip">Belt <span>11:30 AM</span></div><div class="chip">Online <span>9 AM</span></div></div></div></div>`,
   visit: photoCard({ eyebrow: 'Plan your visit', title: 'We saved you a seat.', sub: 'Two campuses, one church. Pick the time that fits your Sunday.', photo: 'sanctuary-choir.jpg', foot: times }),
   story: photoCard({ eyebrow: 'Our story', title: 'From one Thanksgiving night in 1909.', sub: 'Two campuses, eight life stages and the City of Possibility.', photo: 'hero-poster.jpg', tone: 'dark' }),
   community: photoCard({ eyebrow: 'Community outreach', title: 'Finding needs and meeting them.', sub: 'Fresh food Fridays · mobile showers Wednesdays · rides · emergency help', photo: 'prayer-pew.jpg', tone: 'dark' }),
@@ -88,7 +109,12 @@ const cards = {
     <img src="${img('images/church/flyers/church-anniversary.png')}" style="left:170px;top:300px;transform:rotate(-1deg)"></div>
     <div class="fade" style="background:${leftDark}"></div>
     <div class="l">${logo(true)}<p class="eb"><i></i>What’s happening</p><h1>Ignite your fall.</h1><p class="sub">Trunk or Treat, Fire on Fridays, the Veterans Brunch, our 117th Anniversary and The Spirit of Christmas.</p></div></div>`,
-  connect: `<div class="card dark"><img class="mark" src="${img('images/church/spbc-mark-white.svg')}"><div class="l" style="flex-basis:900px">${logo(true)}<p class="eb"><i></i>Saint Paul’s Everywhere</p><h1>One church. One mission. Wherever you are.</h1><p class="sub">The member portal and staff hub of The Saint Paul’s Baptist Church.</p></div></div>`,
+  connect: `<div class="hero"><img class="ph" src="${img('images/church/worship-lights.jpg')}" style="opacity:.55"><div class="shade"></div><div class="glow"></div>
+    <img class="wm" src="${img('images/church/spbc-mark-white.svg')}">
+    <div class="in"><img class="lg" src="${img('images/church/spbc-logo-white.svg')}">
+    <div class="bar"></div><h1>Saint Paul’s <b>Everywhere</b></h1>
+    <p class="sub">The member portal and staff hub. One church, wherever you are.</p>
+    <div class="chips"><div class="chip o">Member portal</div><div class="chip">Staff hub</div><div class="chip">Tap to preview</div></div></div></div>`,
 }
 for (const e of events) {
   const sub = `${e.when}<br>${e.where}`
