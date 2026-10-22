@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 import { church, lifeStages } from '@/config/site'
 import { Art, Eyebrow, Photo, PrimaryButton, art } from '../ui'
 import { useFits } from '../useFits'
@@ -92,7 +92,7 @@ function buildScenes(n: number, aspect: number) {
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 /** Scene timeline: [start of morph, end of morph] for each transition 0→1, 1→2, 2→3, 3→4 */
-const MORPHS: [number, number][] = [[0.13, 0.2], [0.35, 0.42], [0.56, 0.63], [0.76, 0.84]]
+const MORPHS: [number, number][] = [[0.14, 0.24], [0.36, 0.46], [0.56, 0.66], [0.74, 0.84]]
 
 function sceneAt(p: number) {
   for (let i = MORPHS.length - 1; i >= 0; i--) {
@@ -165,16 +165,16 @@ function LightCanvas({ p }: { p: MotionValue<number> }) {
 }
 
 const beats = [
-  { at: [0.0, 0.13], eyebrow: 'Thanksgiving night, 1909', title: 'It started with one light.', text: 'A few believers from First Union Baptist Church received a letter of release and a blessing to form a new church. They named it Saint Paul’s.' },
-  { at: [0.2, 0.35], eyebrow: 'Church Hill', title: 'The light was carried.', text: 'When the church needed a bigger home on Church Hill, members mortgaged their own houses to make it happen.' },
-  { at: [0.42, 0.56], eyebrow: 'Today', title: 'Now the room is full of lights.', text: 'Two campuses, one church, and a sanctuary that lights up when the Word goes forth.' },
-  { at: [0.63, 0.76], eyebrow: 'One church, eight life stages', title: 'Every generation, growing together.', text: 'From imagiNATION to Refiners, there is a pastor and a place for every season of life.' },
+  { at: [0.0, 0.16], eyebrow: 'Thanksgiving night, 1909', title: 'It started with one light.', text: 'A few believers from First Union Baptist Church received a letter of release and a blessing to form a new church. They named it Saint Paul’s.' },
+  { at: [0.22, 0.38], eyebrow: 'Church Hill', title: 'The light was carried.', text: 'When the church needed a bigger home on Church Hill, members mortgaged their own houses to make it happen.' },
+  { at: [0.44, 0.58], eyebrow: 'Today', title: 'Now the room is full of lights.', text: 'Two campuses, one church, and a sanctuary that lights up when the Word goes forth.' },
+  { at: [0.64, 0.76], eyebrow: 'One church, eight life stages', title: 'Every generation, growing together.', text: 'From imagiNATION to Refiners, there is a pastor and a place for every season of life.' },
 ]
 
 function Beat({ p, b, i }: { p: MotionValue<number>; b: (typeof beats)[number]; i: number }) {
   const [a, z] = b.at
-  const opacity = useTransform(p, [Math.max(0, a - 0.025), a + 0.005, z, z + 0.025], [i === 0 ? 1 : 0, 1, 1, 0])
-  const y = useTransform(p, [Math.max(0, a - 0.03), a + 0.02], [i === 0 ? 0 : 20, 0])
+  const opacity = useTransform(p, [Math.max(0, a - 0.03), a + 0.005, z, z + 0.03], [i === 0 ? 1 : 0, 1, 1, 0])
+  const y = useTransform(p, [Math.max(0, a - 0.03), a + 0.005, z, z + 0.03], [i === 0 ? 0 : 24, 0, 0, -24])
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-x-0 top-0">
       <Eyebrow light>{b.eyebrow}</Eyebrow>
@@ -185,7 +185,7 @@ function Beat({ p, b, i }: { p: MotionValue<number>; b: (typeof beats)[number]; 
 }
 
 function StageLabels({ p }: { p: MotionValue<number> }) {
-  const opacity = useTransform(p, [0.61, 0.64, 0.76, 0.79], [0, 1, 1, 0])
+  const opacity = useTransform(p, [0.6, 0.66, 0.76, 0.8], [0, 1, 1, 0])
   const [aspect, setAspect] = useState(1.6)
   useEffect(() => { const on = () => setAspect(window.innerWidth / window.innerHeight); on(); window.addEventListener('resize', on); return () => window.removeEventListener('resize', on) }, [])
   const { tips } = buildScenes(8, aspect)
@@ -195,6 +195,35 @@ function StageLabels({ p }: { p: MotionValue<number> }) {
         <li key={i} className="absolute -translate-x-1/2 -translate-y-[calc(100%+18px)] whitespace-nowrap rounded-full bg-night/60 backdrop-blur px-3 py-1 text-[15px] font-bold text-glow" style={{ left: `${t.x * 100}%`, top: `${t.y * 100}%` }}>{lifeStages[i].name}</li>
       ))}
     </motion.ul>
+  )
+}
+
+/** Where you are in the story (5 chapters), tap to jump, and a Skip button so nobody feels stuck. */
+const CHAPTERS = [0.06, 0.3, 0.51, 0.7, 0.96]
+function ChapterRail({ p, sectionRef }: { p: MotionValue<number>; sectionRef: React.RefObject<HTMLElement> }) {
+  const [active, setActive] = useState(0)
+  useMotionValueEvent(p, 'change', (v) => { const i = v < 0.19 ? 0 : v < 0.41 ? 1 : v < 0.61 ? 2 : v < 0.8 ? 3 : 4; setActive(i) })
+  const go = (frac: number) => {
+    const el = sectionRef.current; if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * frac, behavior: 'smooth' })
+  }
+  const labels = ['1909', 'Church Hill', 'Today', 'Life stages', 'Possibility']
+  return (
+    <>
+      <nav aria-label="Story chapters" className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-end gap-1">
+        {CHAPTERS.map((c, i) => (
+          <button key={i} type="button" onClick={() => go(c)} aria-label={`Chapter ${i + 1} of 5: ${labels[i]}`} aria-current={i === active ? 'step' : undefined} className="group flex items-center gap-2 min-h-[36px] min-w-[36px] justify-end">
+            <span className={`hidden md:inline text-[14px] font-semibold transition-opacity ${i === active ? 'text-glow opacity-100' : 'text-white/70 opacity-0 group-hover:opacity-100'}`}>{labels[i]}</span>
+            <span className={`block rounded-full transition-all duration-300 ${i === active ? 'h-7 w-2.5 bg-orange' : 'h-2.5 w-2.5 bg-white/50 group-hover:bg-white'}`} />
+          </button>
+        ))}
+      </nav>
+      <div className="absolute left-4 sm:left-6 bottom-24 sm:bottom-6 flex items-center gap-3">
+        <span className="hidden sm:inline font-caps text-[14px] font-semibold text-white/80">{active + 1} of 5</span>
+        {active < 4 && <button type="button" onClick={() => { const el = sectionRef.current; if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + el.offsetHeight, behavior: 'smooth' }) }} className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur border border-white/30 px-4 min-h-[44px] text-[15px] font-bold text-white hover:bg-white/25">Skip <ChevronDown size={16} /></button>}
+      </div>
+    </>
   )
 }
 
@@ -209,22 +238,24 @@ export function LightFilm() {
   const reduce = useReducedMotion()
   const fits = useFits(560)
   const ref = useRef<HTMLElement>(null)
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const photo = useTransform(p, [0.36, 0.42, 0.56, 0.62], [0, 0.85, 0.85, 0])
-  const photoScale = useTransform(p, [0.36, 0.62], [1.12, 1])
-  const dawn = useTransform(p, [0.76, 0.86], [0, 1])
-  const finalOpacity = useTransform(p, [0.8, 0.85], [0, 1])
-  const finalY = useTransform(p, [0.8, 0.87], [24, 0])
-  const hint = useTransform(p, [0, 0.05], [1, 0])
-  const s1 = useTransform(p, [0, 0.13, 0.19], [0.75, 0.75, 0])
-  const s2 = useTransform(p, [0.14, 0.2, 0.35, 0.41], [0, 0.6, 0.6, 0])
-  const s4 = useTransform(p, [0.57, 0.63, 0.76, 0.82], [0, 0.35, 0.35, 0])
-  const s5 = useTransform(p, [0.77, 0.88], [0, 0.85])
+  const { scrollYProgress: raw } = useScroll({ target: ref, offset: ['start start', 'end end'] })
+  // Ease the scroll so wheel notches glide instead of stepping.
+  const p = useSpring(raw, { stiffness: 140, damping: 28, mass: 0.35, restDelta: 0.0005 })
+  const photo = useTransform(p, [0.38, 0.45, 0.58, 0.64], [0, 0.85, 0.85, 0])
+  const photoScale = useTransform(p, [0.38, 0.64], [1.12, 1])
+  const dawn = useTransform(p, [0.74, 0.84], [0, 1])
+  const finalOpacity = useTransform(p, [0.77, 0.84], [0, 1])
+  const finalY = useTransform(p, [0.77, 0.86], [28, 0])
+  const hint = useTransform(p, [0, 0.08], [1, 0])
+  const s1 = useTransform(p, [0, 0.16, 0.23], [0.75, 0.75, 0])
+  const s2 = useTransform(p, [0.15, 0.22, 0.38, 0.44], [0, 0.6, 0.6, 0])
+  const s4 = useTransform(p, [0.57, 0.64, 0.76, 0.82], [0, 0.35, 0.35, 0])
+  const s5 = useTransform(p, [0.75, 0.86], [0, 0.85])
 
   if (reduce || !fits) return <StaticLightFilm />
 
   return (
-    <section ref={ref} className="relative h-[640vh] bg-night" aria-label="One Light to a City: the story of Saint Paul’s">
+    <section ref={ref} className="relative h-[340vh] bg-night" aria-label="One Light to a City: the story of Saint Paul’s">
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-night text-white">
         <ArtLayer name="spbc-s1-lamp" opacity={s1} />
         <ArtLayer name="spbc-s2-street" opacity={s2} />
@@ -255,7 +286,8 @@ export function LightFilm() {
             </div>
           </div>
         </motion.div>
-        <motion.p style={{ opacity: hint }} aria-hidden="true" className="absolute left-1/2 -translate-x-1/2 bottom-6 font-caps text-[14px] font-semibold tracking-[0.2em] text-white/70">SCROLL</motion.p>
+        <motion.p style={{ opacity: hint }} aria-hidden="true" className="absolute left-1/2 -translate-x-1/2 bottom-24 sm:bottom-8 flex flex-col items-center gap-2 font-caps text-[15px] font-semibold tracking-[0.12em] text-white/85"><span>Keep scrolling</span><motion.span animate={{ y: [0, 8, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}><ChevronDown size={22} /></motion.span></motion.p>
+        <ChapterRail p={p} sectionRef={ref} />
       </div>
     </section>
   )

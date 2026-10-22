@@ -29,10 +29,10 @@ function AccountSwitcher() {
     return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey) }
   }, [open])
   return (
-    <div ref={ref} className="relative min-w-0">
-      <button type="button" data-tour="staff-account" onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open} className="tap inline-flex items-center gap-2 rounded-full border border-line bg-paper pl-1 pr-2.5 text-sm font-medium hover:border-slate max-w-[44vw] sm:max-w-[16rem]">
+    <div ref={ref} className="relative shrink-0">
+      <button type="button" data-tour="staff-account" onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open} aria-label={`Account: ${me?.name ?? roleMeta[state.role].label}. Switch account or sign out`} className="tap inline-flex items-center gap-2 rounded-full border border-line bg-paper pl-1 pr-2.5 text-sm font-medium hover:border-slate xl:max-w-[16rem]">
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-midnight text-gold-light text-xs font-semibold">{initialsOf(me?.name ?? 'NL')}</span>
-        <span className="min-w-0 text-left leading-tight hidden sm:block"><span className="block truncate">{me?.name ?? roleMeta[state.role].label}</span><span className="block truncate text-[13px] text-slate font-normal">{roleMeta[state.role].label}</span></span>
+        <span className="min-w-0 text-left leading-tight hidden xl:block"><span className="block truncate">{me?.name ?? roleMeta[state.role].label}</span><span className="block truncate text-[13px] text-slate font-normal">{roleMeta[state.role].label}</span></span>
         <ChevronDown size={14} className="shrink-0" />
       </button>
       {open && (

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Routes, Route, NavLink, Link, Outlet, Navigate, useNavigate, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Heart, CalendarDays, Users, Bell, UserCircle, LogOut, HandHeart, BookOpen, Globe, LayoutGrid, Menu, X, Compass, Sprout, MoreHorizontal } from 'lucide-react'
+import { LayoutDashboard, Heart, CalendarDays, Users, Bell, UserCircle, LogOut, HandHeart, BookOpen, Globe, LayoutGrid, X, Compass, Sprout, MoreHorizontal } from 'lucide-react'
 import { Tour, useFirstVisitTour, type TourStep } from '@/components/Tour'
 import { useDemo } from '@/data/store'
 import { PoweredBy, Mark } from '@/components/Logo'
@@ -85,8 +85,7 @@ function PortalShell() {
             <button type="button" data-tour="guide" onClick={toggleGuide} aria-pressed={guide} className={`tap inline-flex items-center gap-1.5 rounded-full border px-3 text-sm font-medium ${guide ? 'bg-gold-bright text-midnight border-gold-bright' : 'border-white/25 text-white/80'}`} title="Simple explanations on every page"><BookOpen size={16} /> <span className="hidden sm:inline">Guide {guide ? 'on' : 'off'}</span></button>
             {staff && <Link to={acct?.home.startsWith('/admin') ? acct.home : '/admin'} className="tap hidden sm:inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 text-sm hover:bg-white/10"><LayoutGrid size={16} /> Staff hub</Link>}
             <Link to="/" className="tap hidden md:inline-flex items-center gap-1.5 rounded-full px-3 text-sm text-white/80 hover:bg-white/10"><Globe size={16} /> Website</Link>
-            <button type="button" onClick={() => { signOut(); nav('/login') }} className="tap inline-flex items-center gap-1.5 rounded-full px-3 text-sm text-white/80 hover:bg-white/10"><LogOut size={16} /> <span className="hidden sm:inline">Sign out</span></button>
-            <button type="button" onClick={() => setMenu(true)} aria-label="Open menu" aria-expanded={menu} aria-haspopup="dialog" className="lg:hidden tap inline-flex items-center justify-center rounded-full border border-white/25 text-white hover:bg-white/10"><Menu size={22} /></button>
+            <button type="button" onClick={() => { signOut(); nav('/login') }} className="tap hidden sm:inline-flex items-center gap-1.5 rounded-full px-3 text-sm text-white/80 hover:bg-white/10"><LogOut size={16} /> Sign out</button>
           </div>
         </div>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-6 pb-10 sm:pt-8 sm:pb-14 flex items-end justify-between gap-6">

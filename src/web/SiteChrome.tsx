@@ -78,7 +78,7 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/login" className={`inline-flex items-center gap-1.5 rounded-full px-3 sm:px-4 min-h-[48px] text-[16px] font-bold border-2 ${overPhoto ? 'border-white/40 text-white hover:bg-white/10' : 'border-grow/25 text-grow hover:bg-grow hover:text-white'}`}><LogIn size={17} /> Sign in</Link>
+            <Link to="/login" className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 sm:px-4 min-h-[48px] text-[16px] font-bold border-2 ${overPhoto ? 'border-white/40 text-white hover:bg-white/10' : 'border-grow/25 text-grow hover:bg-grow hover:text-white'}`}><LogIn size={17} className="max-[359px]:hidden" /> Sign in</Link>
             <PrimaryButton to="/give" className="hidden sm:inline-flex !min-h-[48px] !px-6" icon={<Heart size={16} />}>Give</PrimaryButton>
             <button type="button" onClick={() => setOpen(true)} className={`xl:hidden tap inline-flex items-center justify-center rounded-full min-h-[48px] min-w-[48px] ${overPhoto ? 'text-white hover:bg-white/10' : 'text-ink hover:bg-ink/5'}`} aria-label="Open menu" aria-expanded={open}><Menu size={28} /></button>
           </div>

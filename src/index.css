@@ -29,7 +29,7 @@
   --success: #1e7a4c;
   --warning: #9a5b00;
   --danger: #b42318;
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
